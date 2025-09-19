@@ -1,0 +1,174 @@
+/* --- Fuentes y Colores Base --- */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Evita scroll si las partículas salen de pantalla */
+    background-color: #030303; /* Fondo oscuro elegante */
+    color: #e0e0e0; /* Texto claro */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+}
+
+.cursive {
+    font-family: "Ephesis", cursive;
+    font-weight: 100;
+    color: #FFD700; /* Oro clásico para "¡Felicidades!" */
+    font-size: 12em;
+    margin: 0;
+    
+}
+
+.poppins-bold {
+    font-weight: 700;
+}
+
+.white-text {
+    color: #fffce7; /* Oro clásico */
+    font-size: 5em;
+    margin: 0;
+}
+
+.golden-text {
+    color: #FFD700; /* Oro clásico */
+    font-size: 5.5em;
+    margin-top: 0;
+}
+
+/* --- Estilo Base del Texto --- */
+.golden-sparkle-text {
+
+    
+    /* Configuración para el efecto de oro */
+    background-color: #FFD700; /* Color de fallback para navegadores antiguos */
+    background-image: linear-gradient(
+        135deg,
+        #FFD700 0%,      /* Oro */
+        #FFECB3 25%,     /* Oro más claro */
+        #DAA520 50%,     /* Goldenrod */
+        #FFD700 75%,
+        #FFECB3 100%
+    );
+    
+    /* Aplica el gradiente solo al texto */
+    background-clip: text;
+    -webkit-background-clip: text; /* Prefijo para navegadores Webkit (Chrome, Safari) */
+    color: transparent; /* Hace que el texto sea transparente para mostrar el fondo */
+    
+    /* Crea el efecto de brillo (sombra de texto) */
+    text-shadow: 0 0 5px #FFD700,
+                 0 0 10px #FFD700,
+                 0 0 15px #FFD700,
+                 0 0 20px #FFD700;
+                 
+    /* Inicia la animación de brillo */
+    animation: sparkle-glow 3s infinite alternate ease-in-out;
+}
+
+/* --- Animación del Efecto de Brillo --- */
+@keyframes sparkle-glow {
+    0% {
+        text-shadow: 
+            0 0 2px #FFD700,    /* Desenfoque bajo para un brillo nítido */
+            0 0 5px #FFD700,
+            0 0 8px #FFD700,
+            0 0 10px #FFD700;
+    }
+    100% {
+        text-shadow: 
+            0 0 8px #FFD700,
+            0 0 12px #FFD700,
+            0 0 18px #FFD700,
+            0 0 25px #FFD700;
+    }
+}
+
+/* --- Contenedor de Efectos (Fondo) --- */
+#golden-fireworks-container {
+    position: fixed; /* Fijo en la pantalla */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* Permite hacer clic a través del efecto */
+    z-index: -1; /* Asegura que esté detrás del contenido */
+    overflow: hidden; /* Para que las partículas no desborden */
+}
+
+/* --- Estilo de las Partículas --- */
+.golden-spark {
+    position: absolute;
+    background-color: #FFD700; /* Oro */
+    border-radius: 50%; /* Forma circular por defecto */
+    opacity: 0; /* Empieza invisible */
+    animation: spark-fade-move 4s ease-out forwards; /* Animación para cada partícula */
+    box-shadow: 0 0 8px #FFD700, 0 0 15px rgba(255, 215, 0, 0.5); /* Efecto de brillo */
+}
+
+/* Variaciones de color para un oro más rico (opcional) */
+.golden-spark.alt1 { background-color: #DAA520; /* Goldenrod */ }
+.golden-spark.alt2 { background-color: #B8860B; /* DarkGoldenrod */ }
+.golden-spark.alt3 { background-color: rgb(255, 223, 0); /* Oro un poco más claro */ }
+
+/* --- Animación de las Partículas --- */
+@keyframes spark-fade-move {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+    10% {
+        transform: translate(0, 0) scale(0.8);
+        opacity: 0.9;
+    }
+    80% {
+        opacity: 0.7;
+    }
+    100% {
+        transform: translate(var(--end-x), var(--end-y)) scale(0.3); /* Se mueve a la posición final */
+        opacity: 0;
+    }
+}
+/* --- Contenido de la Plantilla --- */
+.content {
+    position: relative;
+    z-index: 1; /* Asegura que el contenido esté por encima del efecto */
+    text-align: center;
+    padding: 20px;
+    height: 90vh;
+    width: auto;
+    margin: 50px auto; /* Centra el contenido */
+    background-color: #03030361; /* Fondo semitransparente para el contenido */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.agency-logo {
+    max-width: 300px;
+    margin-bottom: 30px;
+}
+
+main p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.signature {
+    margin-top: 40px;
+    font-size: 1.2em;
+    color: #FFD700;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.7em;
+    color: #888;
+    margin-top: auto; /* Empuja el footer hacia abajo */
+}

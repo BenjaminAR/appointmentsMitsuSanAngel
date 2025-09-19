@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Felicidades por tu Nuevo Auto!</title>
+    <link rel="stylesheet" href="tk.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Ephesis&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="golden-fireworks-container"></div> <div class="content">
+        <header>
+            <img src="img/LogoMitsuASA.png" ="Logo de la Agencia" class="agency-logo">
+        </header>
+
+        <main>
+            <h1 class="cursive">¡Felicidades!</h1>
+            <h2 class="poppins-bold white-text">Por tu nuevo auto</h2>
+            <h3 class="golden-text" style="margin-bottom: 3rem;"></h3>
+            <p>En nombre de todo el equipo de Mitsubishi San Angel, queremos expresarte nuestra más sincera felicitación por la adquisición de tu nuevo vehículo.</p>
+            <p>Esperamos que disfrutes cada kilómetro de tu viaje y que este nuevo automóvil te brinde innumerables momentos de alegría y aventura.</p>
+            <p class="signature poppins-bold">El Equipo de Mitsubishi San Angel</p>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Mitsubishi San Angel. Todos los derechos reservados.</p>
+            <p>Visítanos en: Av. Revolución 1321, Tlacopac, Álvaro Obregón, 01049 Ciudad de México, CDMX.</p>
+            <p>Deploy by DEVYIOS&copy;</p>
+        </footer>
+    </div>
+
+    <script src="fire.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+        const cliente = params.get("cliente");
+        if (cliente) {
+            console.log(cliente)
+            document.querySelector("h3.golden-text").textContent = cliente;
+        }
+    });
+    </script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const cliente = params.get("cliente");
+            if (cliente) {
+                document.querySelector("h3.golden-text").textContent = cliente;
+            }
+
+            // Cerrar esta ventana después de 30 minutos
+            setTimeout(() => {
+                window.close();
+            }, 30 * 60 * 1000);
+        });
+    </script>
+
+</body>
+</html>

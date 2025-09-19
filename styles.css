@@ -1,0 +1,267 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+    color: white;
+}
+
+#background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    transition: background-image 0.5s ease;
+    z-index: -1;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 0;
+}
+
+#video-container {
+    position: absolute;
+    bottom: 1.6rem;
+    right: 0;
+    width: 49vw;
+    height: 42.5vh;
+    background: black;
+    display: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 100;
+}
+
+#video-player {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Asegura que el video se muestre correctamente */
+    background: #000; /* Fondo negro para los videos */
+}
+
+/* Contenedor específico para YouTube */
+#youtube-container {
+    width: 100%;
+    height: 100%;
+    
+    display: none;
+}
+
+#start-container {
+    position: absolute;
+    margin-top: 20rem;
+    
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 30px;
+    border-radius: 10px;
+    z-index: 10;
+    width: 90%;
+    max-width: 500px;
+}
+
+#start-btn {
+    padding: 15px 30px;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+}
+
+.logo_img{
+    width: 40rem;
+    
+}
+
+#start-btn:hover {
+    background-color: #45a049;
+}
+
+.parent {
+display: grid;
+/* grid-template-columns: repeat(2, 1fr); */
+grid-template-columns: 2fr 1fr;
+grid-template-rows: 1fr;
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+}
+
+.div1 { grid-area: 1 / 1 / 2 / 2; }
+.div2 { grid-area: 1 / 2 / 2 / 3; }
+
+h1 {
+    margin-bottom: 20px;
+    color: white;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"], 
+textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.playlist-controls {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #2c2b28;
+    width: 50vw;
+    height: 42vh;
+    bottom: 30px;
+    left: 0;
+    z-index: 200;
+    display: none;
+}
+
+.control-btn {
+    display: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #2c2b28;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+.logo_btn{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.control-btn:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+#video-title {
+    position: absolute;
+    top: 0;
+    height: 54vh;
+    width: 100%;
+    
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 10px 15px;
+    border-radius: 5px;
+    display: none;
+    z-index: 200;
+}
+
+#error-message {
+    color: #ff6b6b;
+    margin-top: 10px;
+    display: none;
+}
+
+.mr{
+    background-color: rgba(212, 212, 212, 0.801);
+    position: absolute;
+    bottom: -2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 1.5rem;
+    color: #3a3a3a;
+    font-size: 13pt;
+    padding: 1rem 0;
+    z-index: 1000;
+    
+}
+.mr span{
+    margin-left: 10px;
+}
+.card{
+    height: 18rem;
+    width: 35rem;
+    background-color: rgba(255, 255, 255, 0.737);
+    border-radius: 10px;
+    padding: 10px;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    font-size: 30pt;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+.auto_img img{
+    margin-top: 1rem;
+    width: 10rem;
+}
+
+/* Estilos para la tabla */
+
+.card_list{
+    border-radius: 5px;
+}
+.card_list th{
+    background-color: #78909C;
+    color: whitesmoke;
+    border-radius: 1px;
+    padding: .3rem 1.3rem;
+}
+
+.card_list td {
+    font-weight: 500!important;
+}
+
+.card_list  td{
+    padding: .2rem 1.3rem;
+    border-radius: 1px;
+    color: rgb(43, 43, 43);
+}
+
+/* Estilo para celdas impares */
+tr:nth-child(odd) {
+background-color: rgba(211, 211, 211, 0.796);
+}
+
+/* Estilo para celdas pares (opcional) */
+tr:nth-child(even) {
+background-color: #EBEFF1;
+}
+.date_clock::first-letter{
+    text-transform: uppercase;
+}
+.date_clock{
+    size: 6pt; 
+    font-weight: 400; 
+    padding-top: 1rem; 
+}
