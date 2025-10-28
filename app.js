@@ -1,4 +1,4 @@
-// Función para formatear la fecha y hora
+// Función para formatear la hora
 function formatearHora(fechaString) {
     const fecha = new Date(fechaString);
     return fecha.toLocaleTimeString('es-MX', { 
@@ -16,96 +16,78 @@ function loadJSONP(url, callback) {
         document.body.removeChild(script);
         callback(data);
     };
-    
     script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
     document.body.appendChild(script);
 }
 
-// Función para actualizar la card con el evento más cercano
+// Función principal para actualizar la tabla y la card
 function actualizarCard() {
     loadJSONP('https://script.google.com/macros/s/AKfycbxqazpdGrS9TuIHt1gdVpavLy_QWMNpIye0ORg6eoTdJ2A-4kiAzPTTSSHt0Ls7gWzV/exec', function(data) {
-        //console.log("Datos recibidos:", data);
-        
-        // Obtener la fecha actual en formato yyyy-mm-dd
         const hoy = new Date();
-        const fechaHoy = hoy.toLocaleDateString('es-MX').split('/').reverse().join('-');
-        
-        // Filtrar eventos para hoy
-        const eventosDehoy = data.filter(item => {
-            const fechaEvento = new Date(item.Fecha).toLocaleDateString('es-MX').split('/').reverse().join('-');;
-            return fechaEvento === fechaHoy;
+
+        // 🔹 Filtramos solo eventos de HOY
+        const eventosDeHoy = data.filter(item => {
+            const fechaEvento = new Date(item.Fecha);
+            return (
+                fechaEvento.getFullYear() === hoy.getFullYear() &&
+                fechaEvento.getMonth() === hoy.getMonth() &&
+                fechaEvento.getDate() === hoy.getDate()
+            );
         });
-        
-        //console.log("Eventos de hoy:", eventosDehoy);
-        
-        // Hora actual
-        const horaActual = new Date();
-        
-        // Encontrar el próximo evento que aún no ha pasado
-        const proximoEvento = eventosDehoy.find(item => {
+
+        // 🔹 Convertimos cada evento en un objeto con su hora completa (fecha + hora)
+        const eventosConFechaHora = eventosDeHoy.map(item => {
             const horaEvento = new Date(item.Hora);
-            // Combinar fecha de hoy con la hora del evento para comparación correcta
-            const fechaHoraEvento = new Date(hoy);
-            fechaHoraEvento.setHours(horaEvento.getHours());
-            fechaHoraEvento.setMinutes(horaEvento.getMinutes());
-            //console.log("Próximo evento hora:", fechaHoraEvento);
-            return fechaHoraEvento > horaActual;
-           
+            const fechaCompleta = new Date(item.Fecha);
+            fechaCompleta.setHours(horaEvento.getHours());
+            fechaCompleta.setMinutes(horaEvento.getMinutes());
+            fechaCompleta.setSeconds(0);
+            return { ...item, fechaHoraCompleta: fechaCompleta };
         });
-        
-        // Obtener referencia a la card
-        const tbody = document.querySelector('.card_list table tbody');
+
+        // 🔹 Filtrar los eventos que aún no han pasado
+        const horaActual = new Date();
+        const eventosFuturos = eventosConFechaHora.filter(e => e.fechaHoraCompleta > horaActual);
+
+        // 🔹 Ordenar los eventos futuros por hora (los más próximos primero)
+        eventosFuturos.sort((a, b) => a.fechaHoraCompleta - b.fechaHoraCompleta);
+
+        // 🔹 Tomar solo los 10 más cercanos
+        const proximosEventos = eventosFuturos.slice(0, 5);
+
+        // === Actualizar la card con el evento más cercano ===
         const card = document.querySelector('.card');
         const nextAppoiment = document.getElementById('next_appointment');
-        const parentDiv = document.getElementById('parentDiv')
+        const parentDiv = document.getElementById('parentDiv');
+        const tbody = document.querySelector('.card_list table tbody');
 
-        // Si hay un próximo evento, mostrar sus datos, sino ocultar la card
-        if (proximoEvento) {
-            
-            //console.log("Actividad detectada:", `"${proximoEvento.Actividad}"`);
+        if (proximosEventos.length > 0) {
+            const proximoEvento = proximosEventos[0];
 
-            // Formatear fecha para mostrar
-            const fechaFormateada = new Date(proximoEvento.Fecha).toLocaleDateString('es-MX');
-            // Formatear hora para mostrar
-            const horaFormateada = new Date(proximoEvento.Hora).toLocaleTimeString('es-MX', {
+            // Mostrar información principal
+            const fechaFormateada = proximoEvento.fechaHoraCompleta.toLocaleDateString('es-MX');
+            const horaFormateada = proximoEvento.fechaHoraCompleta.toLocaleTimeString('es-MX', {
                 hour: '2-digit',
                 minute: '2-digit'
-                
-            });
-            const proximoEventoHora = new Date(proximoEvento.Hora);
-            // Suma un minuto
-            proximoEventoHora.setMinutes(proximoEventoHora.getMinutes() - 1);
-            
-            const horaActualFormateada = new Date().toLocaleTimeString('es-MX', {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
-            const horaFormateadaConUnMinutoMas = proximoEventoHora.toLocaleTimeString('es-MX', {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'   
             });
 
-            //console.log('***********Hora antes del IF****************')
-            //console.log(horaFormateadaConUnMinutoMas)
-            //console.log(horaActualFormateada)
+            // Verifica si es entrega y faltan 1 minuto
+            const horaMenosUnMinuto = new Date(proximoEvento.fechaHoraCompleta);
+            horaMenosUnMinuto.setMinutes(horaMenosUnMinuto.getMinutes() - 1);
 
-            if (proximoEvento.Actividad === "ENTREGA" && horaActualFormateada === horaFormateadaConUnMinutoMas) {
-                
-                //console.log('***********Hora despues del IF****************')
-                //console.log(horaFormateadaConUnMinutoMas)
-                //console.log(horaActualFormateada)
-                // Redirigir a tk.html con el nombre del cliente
-                console.log('Se detecto una entrega')
+            if (
+                proximoEvento.Actividad === "ENTREGA" &&
+                Math.abs(horaMenosUnMinuto - horaActual) < 1000 // ~1s de diferencia
+            ) {
+                console.log('Se detectó una entrega');
                 const nuevaVentana = window.open(`tk.html?cliente=${encodeURIComponent(proximoEvento.Cliente)}`, "_blank");
                 nuevaVentana.focus();
                 nuevaVentana.moveTo(0, 0);
                 nuevaVentana.resizeTo(screen.width, screen.height);
-                return; // Salimos para no seguir renderizando la card
+                return;
             }
-            
-            // Actualizar contenido de la card
+
+            // Render de la card
             card.innerHTML = `
                 <span>${proximoEvento.Cliente}</span> <br>
                 <div style="font-size: 23pt; margin-top: .5rem;">
@@ -115,51 +97,41 @@ function actualizarCard() {
                     <span>Asesor: ${proximoEvento.Asesor}</span>
                 </div>
             `;
-            
-            // Mostrar la card
             nextAppoiment.style.display = 'block';
             card.style.display = 'block';
             parentDiv.style.display = 'grid';
-
         } else {
-            // Ocultar la card si no hay eventos próximos para hoy
             nextAppoiment.style.display = 'none';
             card.style.display = 'none';
             parentDiv.style.display = 'block';
-            
         }
-        if (eventosDehoy){
-            // Limpiar la tabla actual
-            tbody.innerHTML = '';
-            
-            // Insertar los nuevos datos
-            eventosDehoy.forEach(item => {
-                    // Crear una nueva fila
-                    const row = document.createElement('tr');
-                    
-                    // Crear y añadir las celdas
-                    row.innerHTML = `
-                        <td>${formatearHora(item.Hora)}</td>
-                        <td>${item.Actividad}</td>
-                        <td>${item.Asesor}</td>
-                        <td>${item.Cliente}</td>
-                        <td>${item.Marca}</td>
-                        <td>${item.Modelo}</td>
-                    `;
 
-                    
-                    // Añadir la fila a la tabla
-                    tbody.appendChild(row);
-                });
-        } else{
-            console.log('No hay eventos hoy')
-            tbody.style.display = 'none';
+        // === Actualizar tabla ===
+        tbody.innerHTML = '';
+
+        if (proximosEventos.length > 0) {
+            proximosEventos.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${formatearHora(item.Hora)}</td>
+                    <td>${item.Actividad}</td>
+                    <td>${item.Asesor}</td>
+                    <td>${item.Cliente}</td>
+                    <td>${item.Marca}</td>
+                    <td>${item.Modelo}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        } else {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td colspan="6">No hay eventos próximos</td>`;
+            tbody.appendChild(row);
         }
     });
 }
 
-// Ejecutar la función al cargar la página
+// Ejecutar al cargar la página
 actualizarCard();
 
-// Actualizar cada cierto tiempo (Cada minuto)
-setInterval(actualizarCard, 1000);
+// Actualizar cada minuto
+setInterval(actualizarCard, 60 * 1000);
