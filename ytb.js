@@ -3,7 +3,9 @@ let videos = [];
 let videoTitles = [];
 let currentIndex = 0;
 let youtubePlayer = null;
+let youtubePlayerSecondary = null;
 let youtubeAPILoaded = false;
+let video_default = 'https://www.youtube.com/watch?v=QSKZZ6FX3Sw';
 
 // Elementos DOM
 const startContainer = document.getElementById("start-container");
@@ -24,6 +26,7 @@ function loadYouTubeAPI() {
     // Verificar si la API ya está cargada
     if (typeof YT !== 'undefined' && typeof YT.Player !== 'undefined') {
         youtubeAPILoaded = true;
+        initializeSecondaryVideo();
         return;
     }
     
@@ -31,6 +34,9 @@ function loadYouTubeAPI() {
     window.onYouTubeIframeAPIReady = function() {
         youtubeAPILoaded = true;
         //console.log("API de YouTube cargada correctamente");
+        
+        // Inicializar video secundario por defecto
+        initializeSecondaryVideo();
         
         // Si ya estamos reproduciendo un video de YouTube, inicializar el player
         if (videos.length > 0 && isYouTubeUrl(videos[currentIndex])) {
@@ -270,7 +276,8 @@ function createYouTubePlayer(videoId) {
             'autoplay': 1,
             'controls': 1,
             'rel': 0,
-            'fs': 1
+            'fs': 1,
+            'mute': 1
         },
         events: {
             'onReady': function(event) {
@@ -298,6 +305,9 @@ function playLocalVideo(url) {
     
     //console.log("Cargando video local:", url);
     
+    // Mutear el video
+    videoPlayer.muted = true;
+
     // Configurar eventos antes de establecer la fuente
     videoPlayer.oncanplay = function() {
         //console.log("Video listo para reproducir");
@@ -373,3 +383,61 @@ setInterval(actualizarFechaHora, 1000);
 
 // Mostrar la fecha y hora inmediatamente al cargar la página
 actualizarFechaHora();
+
+// Inicializar video secundario por defecto
+function initializeSecondaryVideo() {
+    const videoId = getYouTubeID(video_default);
+    
+    if (!videoId) {
+        console.error("ID de YouTube inválido para video secundario");
+        return;
+    }
+    
+    if (!youtubeAPILoaded) {
+        console.log("Esperando API de YouTube para video secundario...");
+        setTimeout(initializeSecondaryVideo, 500);
+        return;
+    }
+    
+    const youtubeContainerSecondary = document.getElementById('youtube-container_secondary');
+    
+    if (!youtubeContainerSecondary) {
+        console.error("No se encontró el contenedor secundario");
+        return;
+    }
+    
+    // Limpiar contenedor
+    youtubeContainerSecondary.innerHTML = '';
+    
+    // Crear un div para el reproductor secundario
+    const playerDiv = document.createElement('div');
+    playerDiv.id = 'youtube-player-secondary';
+    youtubeContainerSecondary.appendChild(playerDiv);
+    
+    // Crear el reproductor secundario
+    youtubePlayerSecondary = new YT.Player('youtube-player-secondary', {
+        height: '100%',
+        width: '100%',
+        videoId: videoId,
+        playerVars: {
+            'autoplay': 1,
+            'controls': 1,
+            'rel': 0,
+            'fs': 1,
+            'loop': 1,
+            'playlist': videoId // Necesario para que funcione el loop
+        },
+        events: {
+            'onReady': function(event) {
+                console.log("Reproductor secundario listo");
+                event.target.playVideo();
+            },
+            'onError': function(event) {
+                console.error("Error en reproductor secundario:", event.data);
+            }
+        }
+    });
+}
+
+// Cargar la API de YouTube al inicio
+loadYouTubeAPI();

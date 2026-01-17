@@ -66,7 +66,6 @@ body {
 #start-container {
     position: absolute;
     margin-top: 20rem;
-    
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -101,16 +100,37 @@ body {
 }
 
 .parent {
-display: grid;
-/* grid-template-columns: repeat(2, 1fr); */
-grid-template-columns: 2fr 1fr;
-grid-template-rows: 1fr;
-grid-column-gap: 0px;
-grid-row-gap: 0px;
+    display: grid;
+    /* grid-template-columns: repeat(2, 1fr); */
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    height: 95%;
 }
 
-.div1 { grid-area: 1 / 1 / 2 / 2; }
-.div2 { grid-area: 1 / 2 / 2 / 3; }
+.div1 { 
+    height: 100%; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    grid-area: 1 / 1 / 2 / 2; 
+}
+.div2 { 
+    height: 100%; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+    grid-area: 1 / 2 / 2 / 3; 
+}
+
+.next_appointment{
+    text-align: center; 
+    font-size: 19pt; 
+    margin-bottom: 1rem; 
+    display: none;
+}
 
 h1 {
     margin-bottom: 20px;
@@ -164,7 +184,6 @@ textarea {
     width: 100%;
     justify-content: center;
     align-items: center;
-    gap: 2rem;
 }
 
 .control-btn:hover {
@@ -257,9 +276,18 @@ background-color: rgba(211, 211, 211, 0.796);
 tr:nth-child(even) {
 background-color: #EBEFF1;
 }
+
+.div_date_clock{
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    width: 100%;
+}
+
 .date_clock::first-letter{
     text-transform: uppercase;
 }
+
 .date_clock{
     size: 6pt; 
     font-weight: 400; 

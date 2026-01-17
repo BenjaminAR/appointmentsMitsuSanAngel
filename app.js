@@ -108,8 +108,18 @@ function actualizarCard() {
 
         // === Actualizar tabla ===
         tbody.innerHTML = '';
+    
+        const card_list = document.getElementById('card_list');
+        const div_date_clock = document.getElementById('div_date_clock');
+        const fecha_hora = document.getElementById('fecha-hora');
 
         if (proximosEventos.length > 0) {
+            
+            card_list.style.display = 'block';
+            div_date_clock.style.height = '10%';
+            fecha_hora.style.fontSize = '13pt';
+            console.log('nuevos eventos se deberia apliar los cambios.');
+
             proximosEventos.forEach(item => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -123,9 +133,14 @@ function actualizarCard() {
                 tbody.appendChild(row);
             });
         } else {
-            const row = document.createElement('tr');
-            row.innerHTML = `<td colspan="6">No hay eventos próximos</td>`;
-            tbody.appendChild(row);
+            //const row = document.createElement('tr');
+            //row.innerHTML = `<td colspan="6">No hay eventos próximos</td>`;
+            //tbody.appendChild(row);
+            card_list.style.display = 'none';
+            div_date_clock.style.height = '90%';
+            fecha_hora.style.fontSize = '24pt';
+
+            console.log('No hay eventos pendientes')
         }
     });
 }
